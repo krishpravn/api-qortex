@@ -1,8 +1,7 @@
 <p align="center">
-  <img src="screenshots/logo.png" alt="API Qortex" width="80">
+  <img src="screenshots/logo.png" alt="API Qortex" width="320">
 </p>
 
-<h1 align="center">API Qortex</h1>
 
 <p align="center">
   <strong>Self-hosted, AI-powered API testing platform</strong><br>

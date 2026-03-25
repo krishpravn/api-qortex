@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Qortex — Self-Hosted AI-Powered API Testing Platform</title>
+<meta name="description" content="Solo-built API testing platform with multi-protocol playground, 6-provider AI failure analysis, 25+ assertions, and zero recurring costs. Built with Next.js 16, React 19, TypeScript, Prisma.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#070B14;--bg2:#0F172A;--bg3:#1E293B;
+  --surface:rgba(255,255,255,0.03);--surface2:rgba(255,255,255,0.06);
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.12);
+  --text:#F1F5F9;--text2:#94A3B8;--text3:#64748B;
+  --blue:#2563EB;--purple:#7C3AED;--green:#059669;--amber:#D97706;
+  --red:#DC2626;--cyan:#0891B2;--pink:#EC4899;
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;overflow-x:hidden}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ─── Layout ─── */
+.container{max-width:1140px;margin:0 auto;padding:0 24px}
+section{padding:100px 0}
+.section-label{font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:block}
+.section-title{font-size:clamp(28px,4vw,42px);font-weight:800;line-height:1.15;margin-bottom:16px;letter-spacing:-0.5px}
+.section-desc{font-size:17px;color:var(--text2);max-width:640px;line-height:1.7}
+
+/* ─── Hero ─── */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:60px 0}
+.hero::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,0.12),transparent 70%);top:-100px;left:-200px;pointer-events:none}
+.hero::after{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.1),transparent 70%);bottom:-150px;right:-100px;pointer-events:none}
+.hero-content{position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:100px;padding:6px 16px 6px 8px;font-size:13px;color:var(--text2);margin-bottom:32px}
+.hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-size:clamp(40px,6vw,72px);font-weight:800;line-height:1.05;letter-spacing:-1.5px;margin-bottom:20px}
+.hero h1 .gradient{background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(16px,2vw,20px);color:var(--text2);max-width:600px;line-height:1.6;margin-bottom:40px}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:56px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#1d4ed8;text-decoration:none}
+.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border2)}
+.btn-ghost:hover{background:var(--surface);border-color:var(--border);text-decoration:none}
+
+/* ─── Stats Bar ─── */
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--border);border-radius:14px;overflow:hidden;border:1px solid var(--border)}
+.stat{background:var(--bg2);padding:24px 16px;text-align:center}
+.stat-num{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:2px}
+.stat-num.blue{color:var(--blue)}.stat-num.purple{color:var(--purple)}.stat-num.green{color:var(--green)}.stat-num.amber{color:var(--amber)}.stat-num.pink{color:var(--pink)}.stat-num.cyan{color:var(--cyan)}
+.stat-label{font-size:12px;color:var(--text3);font-weight:500;letter-spacing:0.5px}
+
+/* ─── Builder Credit ─── */
+.builder{padding:80px 0 0}
+.builder-card{display:flex;align-items:center;gap:32px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px 40px}
+.builder-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;flex-shrink:0}
+.builder-info h3{font-size:18px;font-weight:700;margin-bottom:4px}
+.builder-info p{font-size:14px;color:var(--text2)}
+.builder-info a{color:var(--blue);font-weight:500}
+
+/* ─── Problem Section ─── */
+.problems{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.problem-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;position:relative;overflow:hidden}
+.problem-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.problem-card.r::before{background:linear-gradient(90deg,var(--red),transparent)}
+.problem-card.b::before{background:linear-gradient(90deg,var(--blue),transparent)}
+.problem-card.a::before{background:linear-gradient(90deg,var(--amber),transparent)}
+.problem-card.p::before{background:linear-gradient(90deg,var(--purple),transparent)}
+.problem-card.g::before{background:linear-gradient(90deg,var(--green),transparent)}
+.problem-card.c::before{background:linear-gradient(90deg,var(--cyan),transparent)}
+.problem-icon{font-size:24px;margin-bottom:12px}
+.problem-card h4{font-size:15px;font-weight:700;margin-bottom:8px;color:var(--text)}
+.problem-card p{font-size:13px;color:var(--text3);line-height:1.6}
+.problem-card .fix{font-size:13px;color:var(--green);font-weight:600;margin-top:12px;display:flex;align-items:center;gap:6px}
+
+/* ─── Feature Grid ─── */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-top:48px}
+.feature{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;transition:border-color .2s}
+.feature:hover{border-color:var(--border2)}
+.feature-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:20px}
+.feature-icon.bl{background:rgba(37,99,235,0.12);color:var(--blue)}
+.feature-icon.pu{background:rgba(124,58,237,0.12);color:var(--purple)}
+.feature-icon.gr{background:rgba(5,150,105,0.12);color:var(--green)}
+.feature-icon.am{background:rgba(217,119,6,0.12);color:var(--amber)}
+.feature-icon.cy{background:rgba(8,145,178,0.12);color:var(--cyan)}
+.feature-icon.pk{background:rgba(236,72,153,0.12);color:var(--pink)}
+.feature h3{font-size:17px;font-weight:700;margin-bottom:8px}
+.feature p{font-size:14px;color:var(--text2);line-height:1.65}
+.feature .meta{margin-top:16px;display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:6px;background:var(--surface2);border:1px solid var(--border);color:var(--text3)}
+
+/* ─── Protocols ─── */
+.protocols{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
+@media(max-width:768px){.protocols{grid-template-columns:repeat(2,1fr)}}
+.protocol{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center;position:relative;overflow:hidden}
+.protocol::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.protocol:nth-child(1)::before{background:var(--blue)}
+.protocol:nth-child(2)::before{background:var(--purple)}
+.protocol:nth-child(3)::before{background:var(--green)}
+.protocol:nth-child(4)::before{background:var(--amber)}
+.protocol-name{font-size:20px;font-weight:800;margin-bottom:4px}
+.protocol-desc{font-size:12px;color:var(--text3);line-height:1.5}
+
+/* ─── AI Chain ─── */
+.chain{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:48px}
+.chain-node{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;position:relative}
+.chain-node:not(:last-child)::after{content:'\2192';position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px;z-index:1}
+.chain-node .num{font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:4px}
+.chain-node .name{font-size:14px;font-weight:700;margin-bottom:2px}
+.chain-node .model{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.chain-note{margin-top:24px;text-align:center;font-size:14px;color:var(--text3);font-style:italic}
+
+/* ─── Tech Stack ─── */
+.stack{display:flex;flex-wrap:wrap;gap:12px;margin-top:40px;justify-content:center}
+.stack-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text2);transition:border-color .2s}
+.stack-item:hover{border-color:var(--blue);color:var(--text)}
+
+/* ─── Screenshot Gallery ─── */
+.gallery-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:40px;margin-bottom:32px}
+.gallery-tab{font-family:var(--mono);font-size:12px;padding:8px 16px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;transition:all .25s;font-weight:500}
+.gallery-tab:hover{border-color:var(--border2);color:var(--text2)}
+.gallery-tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+
+.filmstrip-wrapper{position:relative;margin:0 -24px;padding:0;overflow:hidden}
+.filmstrip-wrapper::before,.filmstrip-wrapper::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
+.filmstrip-wrapper::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.filmstrip-wrapper::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent)}
+
+.filmstrip{display:flex;gap:20px;padding:8px 40px 24px;overflow-x:hidden;will-change:transform}
+
+.film-card{flex-shrink:0;width:400px;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--bg2);cursor:pointer;transition:border-color .3s,box-shadow .3s}
+.film-card:hover{border-color:var(--blue);box-shadow:0 12px 40px rgba(37,99,235,0.15)}
+.film-card-img{aspect-ratio:16/10;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--bg2)}
+.film-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.film-card:hover .film-card-img img{transform:scale(1.02)}
+.film-placeholder{text-align:center;padding:40px;width:100%}
+.film-placeholder .ph-icon{font-size:36px;margin-bottom:8px;opacity:.25}
+.film-placeholder p{font-size:13px;color:var(--text3)}
+
+.film-card-info{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.film-card-info .name{font-size:14px;font-weight:600}
+.film-card-info .cat{font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:6px;background:var(--surface2);color:var(--text3)}
+
+/* Lightbox */
+.lightbox{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.92);backdrop-filter:blur(16px);align-items:center;justify-content:center;cursor:zoom-out;padding:40px}
+.lightbox.open{display:flex}
+.lightbox img{max-width:90vw;max-height:85vh;border-radius:12px;border:1px solid var(--border2);box-shadow:0 24px 80px rgba(0,0,0,0.5)}
+.lightbox-placeholder{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:80px 120px;text-align:center}
+.lightbox-placeholder p{color:var(--text3);font-size:16px}
+.lightbox-close{position:absolute;top:24px;right:32px;font-size:28px;color:var(--text2);cursor:pointer;width:44px;height:44px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.lightbox-close:hover{background:var(--surface);color:var(--text)}
+.lightbox-caption{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:10px;padding:12px 24px;text-align:center}
+.lightbox-caption .lc-name{font-size:15px;font-weight:700}
+.lightbox-caption .lc-desc{font-size:12px;color:var(--text3);margin-top:2px}
+
+/* Static grid fallback for noscript */
+.gallery-grid{display:none;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:32px}
+
+/* ─── Architecture ─── */
+.arch-flow{display:flex;flex-direction:column;gap:0;align-items:center;margin-top:48px}
+.arch-layer{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 32px;min-width:360px;display:flex;align-items:center;gap:16px}
+.arch-layer .n{font-family:var(--mono);font-size:12px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
+.arch-layer:nth-child(1) .n{background:rgba(37,99,235,0.15);color:var(--blue)}
+.arch-layer:nth-child(3) .n{background:rgba(8,145,178,0.15);color:var(--cyan)}
+.arch-layer:nth-child(5) .n{background:rgba(5,150,105,0.15);color:var(--green)}
+.arch-layer:nth-child(7) .n{background:rgba(124,58,237,0.15);color:var(--purple)}
+.arch-layer:nth-child(9) .n{background:rgba(217,119,6,0.15);color:var(--amber)}
+.arch-layer .title{font-size:15px;font-weight:700}
+.arch-layer .desc{font-size:12px;color:var(--text3)}
+.arch-arrow{color:var(--text3);font-size:18px;padding:4px 0}
+
+/* ─── Self-Hosted ─── */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+@media(max-width:640px){.compare{grid-template-columns:1fr}}
+.compare-card{border-radius:14px;padding:32px;border:1px solid var(--border)}
+.compare-card.them{background:rgba(220,38,38,0.04);border-color:rgba(220,38,38,0.15)}
+.compare-card.us{background:rgba(5,150,105,0.04);border-color:rgba(5,150,105,0.15)}
+.compare-card h4{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.compare-card ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.compare-card li{font-size:14px;color:var(--text2);display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.compare-card li .icon{flex-shrink:0;margin-top:2px}
+
+/* ─── About Builder ─── */
+.about-builder{text-align:center;max-width:640px;margin:0 auto}
+.about-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:#fff;margin:0 auto 20px}
+.about-builder h3{font-size:24px;font-weight:800;margin-bottom:4px}
+.about-builder .role{font-size:15px;color:var(--text2);margin-bottom:16px}
+.about-builder .bio{font-size:15px;color:var(--text3);line-height:1.7;margin-bottom:24px}
+.about-links{display:flex;gap:16px;justify-content:center}
+
+/* ─── Footer ─── */
+footer{border-top:1px solid var(--border);padding:40px 0;text-align:center}
+footer p{font-size:13px;color:var(--text3)}
+footer .tagline{font-family:var(--mono);font-size:12px;color:var(--text3);margin-top:8px;letter-spacing:1px}
+
+/* ─── Divider ─── */
+.rainbow-bar{height:3px;background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink),var(--amber),var(--green));border-radius:2px;width:80px}
+
+/* ─── Responsive ─── */
+@media(max-width:768px){
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .chain{grid-template-columns:repeat(3,1fr)}
+  .problems{grid-template-columns:1fr}
+  .builder-card{flex-direction:column;text-align:center}
+  .arch-layer{min-width:auto;width:100%}
+  section{padding:60px 0}
+  .film-card{width:320px}
+}
+
+/* ─── Animations ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hero-content>*{animation:fadeUp .6s ease both}
+.hero-content>:nth-child(1){animation-delay:.1s}
+.hero-content>:nth-child(2){animation-delay:.2s}
+.hero-content>:nth-child(3){animation-delay:.3s}
+.hero-content>:nth-child(4){animation-delay:.35s}
+.hero-content>:nth-child(5){animation-delay:.4s}
+.hero-content>:nth-child(6){animation-delay:.5s}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+<div class="container">
+<div class="hero-content">
+
+<div class="hero-badge">
+  <span class="dot"></span>
+  Solo-built by Krishna Praveen &middot; 88,000+ lines of code
+</div>
+
+<h1>Test APIs.<br>Let AI explain<br>the <span class="gradient">failures.</span></h1>
+
+<p class="hero-sub">A self-hosted, AI-powered API testing platform with a unified playground for REST, GraphQL, WebSocket, and gRPC — featuring 6-provider AI failure analysis, 25+ assertion types, and zero recurring costs.</p>
+
+<div class="hero-actions">
+  <a href="#screenshots" class="btn btn-primary">See Screenshots &darr;</a>
+  <a href="#architecture" class="btn btn-ghost">Architecture &rarr;</a>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num blue">88K+</div><div class="stat-label">Lines of Code</div></div>
+  <div class="stat"><div class="stat-num purple">15</div><div class="stat-label">Engine Modules</div></div>
+  <div class="stat"><div class="stat-num green">127</div><div class="stat-label">React Components</div></div>
+  <div class="stat"><div class="stat-num cyan">25+</div><div class="stat-label">Assertion Types</div></div>
+  <div class="stat"><div class="stat-num amber">6</div><div class="stat-label">AI Providers</div></div>
+  <div class="stat"><div class="stat-num pink">4</div><div class="stat-label">API Protocols</div></div>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- ═══ BUILDER CREDIT ═══ -->
+<div class="builder">
+<div class="container">
+<div class="builder-card">
+  <div class="builder-avatar">KP</div>
+  <div class="builder-info">
+    <h3>Krishna Praveen Manchala</h3>
+    <p>QA Manager with 17+ years of experience. Built API Qortex as a solo full-stack project &mdash; from architecture design to live server deployment. Not a developer by title, but built this to solve real problems in API testing.</p>
+    <a href="https://in.linkedin.com/in/krishnapraveen-m" target="_blank">LinkedIn &rarr;</a>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ═══ PROBLEM ═══ -->
+<section>
+<div class="container">
+  <span class="section-label" style="color:var(--red)">The Problem</span>
+  <h2 class="section-title">API testing tools are broken.</h2>
+  <p class="section-desc">Most API testing tools are cloud-locked, charge per seat, have no AI, and force you to use separate tools for each protocol. API Qortex fixes all of that.</p>
+
+  <div class="problems">
+    <div class="problem-card r">
+      <div class="problem-icon">&#9729;</div>
+      <h4>Cloud-locked & expensive</h4>
+      <p>Postman charges per seat. Your test data lives on their servers. Enterprise plans cost thousands per year.</p>
+      <div class="fix">&#10003; Self-hosted. Zero cost. Your server, your data.</div>
+    </div>
+    <div class="problem-card p">
+      <div class="problem-icon">&#9888;</div>
+      <h4>Tests fail with no explanation</h4>
+      <p>A test returns 401 Unauthorized. Why? Was the token expired? Wrong scope? Missing header? You're on your own.</p>
+      <div class="fix">&#10003; AI reads the response and tells you exactly why.</div>
+    </div>
+    <div class="problem-card a">
+      <div class="problem-icon">&#9881;</div>
+      <h4>Different tool for each protocol</h4>
+      <p>Postman for REST. GraphQL Playground for GraphQL. wscat for WebSocket. BloomRPC for gRPC. Four tools, four workflows.</p>
+      <div class="fix">&#10003; One unified playground for all 4 protocols.</div>
+    </div>
+    <div class="problem-card b">
+      <div class="problem-icon">&#8644;</div>
+      <h4>No import, no migration path</h4>
+      <p>Switching tools means recreating every test from scratch. Manual copy-paste across hundreds of endpoints.</p>
+      <div class="fix">&#10003; Import from Postman, OpenAPI, HAR, cURL, Insomnia in one click.</div>
+    </div>
+    <div class="problem-card g">
+      <div class="problem-icon">&#128274;</div>
+      <h4>No team controls or audit trail</h4>
+      <p>Everyone has the same access. No roles, no permissions, no visibility into who changed what and when.</p>
+      <div class="fix">&#10003; 4 roles, 20 permissions, full audit log, environment isolation.</div>
+    </div>
+    <div class="problem-card c">
+      <div class="problem-icon">&#128737;</div>
+      <h4>No security or performance testing</h4>
+      <p>Need a separate tool for load testing. Security scanning? Another tool. Performance baselines? Manual tracking.</p>
+      <div class="fix">&#10003; Built-in security scanner, load tester, and response time tracking.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section>
+<div class="container">
+  <span class="section-label" style="color:var(--blue)">What's Built</span>
+  <h2 class="section-title">Everything a team needs. Nothing they don't.</h2>
+  <p class="section-desc">Every feature exists because it solves a real problem in API testing workflows. No bloat.</p>
+
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon pu">&#9733;</div>
+      <h3>AI Failure Analysis</h3>
+      <p>When tests fail, AI reads the full context &mdash; request, response, headers, assertions &mdash; and returns a structured diagnosis with root cause, category, severity, and a specific fix suggestion.</p>
+      <div class="meta"><span class="tag">7 AI features</span><span class="tag">Structured diagnosis</span><span class="tag">Auto-categorization</span></div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon bl">&#9878;</div>
+      <h3>Multi-Protocol Playground</h3>
+      <p>REST with 8 body types and 7 request tabs. GraphQL with introspection and schema explorer. WebSocket with real-time messaging. gRPC with proto parser and all 4 call types.</p>
+      <div class="meta"><span class="tag">REST</span><span class="tag">GraphQL</span><span class="tag">WebSocket</span><span class="tag">gRPC</span></div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon gr">&#10004;</div>
+      <h3>25+ Assertion Types</h3>
+      <p>Status, body, JSON path, array, header, performance, and advanced checks. Visual builder for no-code assertion creation. Global policies for org-wide quality enforcement.</p>
+      <div class="meta"><span class="tag">Visual builder</span><span class="tag">JSON Path</span><span class="tag">Schema validation</span><span class="tag">Policies</span></div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon am">&#8614;</div>
+      <h3>6 Smart Import Parsers</h3>
+      <p>Drop a file and the format is auto-detected. Postman v2/v2.1, OpenAPI/Swagger, HAR, cURL, Insomnia, Raw JSON. AI analyzes dependency chains during import.</p>
+      <div class="meta"><span class="tag">Auto-detect</span><span class="tag">Dependency chain</span><span class="tag">Auth auto-config</span></div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon cy">&#9881;</div>
+      <h3>RBAC & Team Features</h3>
+      <p>4 roles (Admin, Manager, Lead, Tester) with 20 granular permissions. Audit logging, environment management, SSE real-time execution, and run-to-run comparison.</p>
+      <div class="meta"><span class="tag">20 permissions</span><span class="tag">Audit trail</span><span class="tag">Environments</span></div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon pk">&#9874;</div>
+      <h3>Plugin System & Scripts</h3>
+      <p>8 lifecycle hooks for extending functionality. Postman-compatible pm.* scripting API for pre/post request logic, variable chaining, and custom assertions.</p>
+      <div class="meta"><span class="tag">8 hooks</span><span class="tag">pm.* API</span><span class="tag">Variable chaining</span></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ PROTOCOLS ═══ -->
+<section>
+<div class="container">
+  <span class="section-label" style="color:var(--cyan)">Unified Playground</span>
+  <h2 class="section-title">4 protocols. One workspace.</h2>
+  <p class="section-desc">No more switching between tools. Test every type of API in the same interface, with protocol-specific features and themed editors.</p>
+
+  <div class="protocols">
+    <div class="protocol">
+      <div class="protocol-name">REST</div>
+      <div class="protocol-desc">7 HTTP methods<br>8 body types<br>9 auth types<br>Pre/post scripts</div>
+    </div>
+    <div class="protocol">
+      <div class="protocol-name">GraphQL</div>
+      <div class="protocol-desc">Query & mutation<br>Schema introspection<br>Variables panel<br>Example library</div>
+    </div>
+    <div class="protocol">
+      <div class="protocol-name">WebSocket</div>
+      <div class="protocol-desc">Real-time messaging<br>JSON/Text toggle<br>Connection tracking<br>Message log</div>
+    </div>
+    <div class="protocol">
+      <div class="protocol-name">gRPC</div>
+      <div class="protocol-desc">Proto parser<br>4 call types<br>Metadata editor<br>1,070 lines</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ AI CHAIN ═══ -->
+<section>
+<div class="container">
+  <span class="section-label" style="color:var(--purple)">AI Intelligence</span>
+  <h2 class="section-title">6-provider fallback chain.<br>AI never silently stops.</h2>
+  <p class="section-desc">When one provider hits its rate limit, the system automatically switches to the next. Model rotation within providers exhausts all options before jumping. Ollama provides offline fallback.</p>
+
+  <div class="chain">
+    <div class="chain-node"><div class="num">#1</div><div class="name" style="color:var(--amber)">Groq</div><div class="model">6 models &middot; 14.4K/day</div></div>
+    <div class="chain-node"><div class="num">#2</div><div class="name" style="color:var(--blue)">Google AI</div><div class="model">Gemini &middot; 1M tkn/min</div></div>
+    <div class="chain-node"><div class="num">#3</div><div class="name" style="color:var(--purple)">OpenAI</div><div class="model">GPT-4o</div></div>
+    <div class="chain-node"><div class="num">#4</div><div class="name" style="color:var(--cyan)">Anthropic</div><div class="model">Claude</div></div>
+    <div class="chain-node"><div class="num">#5</div><div class="name" style="color:var(--pink)">Mistral</div><div class="model">1B tokens free</div></div>
+    <div class="chain-node"><div class="num">#6</div><div class="name" style="color:var(--green)">Ollama</div><div class="model">Local &middot; Unlimited</div></div>
+  </div>
+  <p class="chain-note">Rate limited? Auto-switch. No API key? Silently skipped. Ollama = always available offline.</p>
+</div>
+</section>
+
+<!-- ═══ SCREENSHOTS ═══ -->
+<section id="screenshots">
+<div class="container">
+  <span class="section-label" style="color:var(--green)">In Action</span>
+  <h2 class="section-title">See it working.</h2>
+  <p class="section-desc">10 screens from the live platform. Auto-scrolls — hover to pause, click to expand.</p>
+
+  <div class="gallery-tabs">
+    <button class="gallery-tab active" onclick="filterGallery('all')">All</button>
+    <button class="gallery-tab" onclick="filterGallery('organize')">Organize & Import</button>
+    <button class="gallery-tab" onclick="filterGallery('test')">Test & Execute</button>
+    <button class="gallery-tab" onclick="filterGallery('ai')">AI Intelligence</button>
+    <button class="gallery-tab" onclick="filterGallery('admin')">Dashboard & Admin</button>
+  </div>
+</div>
+
+<div class="filmstrip-wrapper">
+  <div class="filmstrip" id="filmstrip">
+    <!-- Set 1 (original) -->
+    <div class="film-card" data-cat="organize" onclick="openLightbox(0)">
+      <div class="film-card-img"><img src="screenshots/projects.png" alt="Projects Page"></div>
+      <div class="film-card-info"><span class="name">Projects</span><span class="cat">Organize</span></div>
+    </div>
+    <div class="film-card" data-cat="organize" onclick="openLightbox(1)">
+      <div class="film-card-img"><img src="screenshots/import.png" alt="Smart Import"></div>
+      <div class="film-card-info"><span class="name">Smart Import</span><span class="cat">Import</span></div>
+    </div>
+    <div class="film-card" data-cat="test" onclick="openLightbox(2)">
+      <div class="film-card-img"><img src="screenshots/playground-rest.png" alt="REST Playground"></div>
+      <div class="film-card-info"><span class="name">REST Playground</span><span class="cat">Execute</span></div>
+    </div>
+    <div class="film-card" data-cat="test" onclick="openLightbox(3)">
+      <div class="film-card-img"><img src="screenshots/playground-graphql.png" alt="GraphQL Playground"></div>
+      <div class="film-card-info"><span class="name">GraphQL Playground</span><span class="cat">Execute</span></div>
+    </div>
+    <div class="film-card" data-cat="test" onclick="openLightbox(4)">
+      <div class="film-card-img"><img src="screenshots/execution-results.png" alt="Test Execution"></div>
+      <div class="film-card-info"><span class="name">Execution Results</span><span class="cat">Results</span></div>
+    </div>
+    <div class="film-card" data-cat="ai" onclick="openLightbox(5)">
+      <div class="film-card-img"><img src="screenshots/ai-failure-analysis.png" alt="AI Failure Analysis"></div>
+      <div class="film-card-info"><span class="name">AI Failure Analysis</span><span class="cat">AI</span></div>
+    </div>
+    <div class="film-card" data-cat="ai" onclick="openLightbox(6)">
+      <div class="film-card-img"><img src="screenshots/ai-assistant.png" alt="AI Assistant"></div>
+      <div class="film-card-info"><span class="name">AI Assistant</span><span class="cat">AI</span></div>
+    </div>
+    <div class="film-card" data-cat="admin" onclick="openLightbox(7)">
+      <div class="film-card-img"><img src="screenshots/home.png" alt="Home Dashboard"></div>
+      <div class="film-card-info"><span class="name">Home Dashboard</span><span class="cat">Dashboard</span></div>
+    </div>
+    <div class="film-card" data-cat="admin" onclick="openLightbox(8)">
+      <div class="film-card-img"><img src="screenshots/settings.png" alt="Settings"></div>
+      <div class="film-card-info"><span class="name">Settings</span><span class="cat">Admin</span></div>
+    </div>
+    <div class="film-card" data-cat="admin" onclick="openLightbox(9)">
+      <div class="film-card-img"><img src="screenshots/help-center.png" alt="Help Center"></div>
+      <div class="film-card-info"><span class="name">Help Center</span><span class="cat">Admin</span></div>
+    </div>
+
+    <!-- Set 2 (duplicate for infinite scroll illusion) -->
+    <div class="film-card" data-cat="organize" onclick="openLightbox(0)">
+      <div class="film-card-img"><img src="screenshots/projects.png" alt="Projects Page"></div>
+      <div class="film-card-info"><span class="name">Projects</span><span class="cat">Organize</span></div>
+    </div>
+    <div class="film-card" data-cat="organize" onclick="openLightbox(1)">
+      <div class="film-card-img"><img src="screenshots/import.png" alt="Smart Import"></div>
+      <div class="film-card-info"><span class="name">Smart Import</span><span class="cat">Import</span></div>
+    </div>
+    <div class="film-card" data-cat="test" onclick="openLightbox(2)">
+      <div class="film-card-img"><img src="screenshots/playground-rest.png" alt="REST Playground"></div>
+      <div class="film-card-info"><span class="name">REST Playground</span><span class="cat">Execute</span></div>
+    </div>
+    <div class="film-card" data-cat="test" onclick="openLightbox(3)">
+      <div class="film-card-img"><img src="screenshots/playground-graphql.png" alt="GraphQL Playground"></div>
+      <div class="film-card-info"><span class="name">GraphQL Playground</span><span class="cat">Execute</span></div>
+    </div>
+    <div class="film-card" data-cat="test" onclick="openLightbox(4)">
+      <div class="film-card-img"><img src="screenshots/execution-results.png" alt="Test Execution"></div>
+      <div class="film-card-info"><span class="name">Execution Results</span><span class="cat">Results</span></div>
+    </div>
+    <div class="film-card" data-cat="ai" onclick="openLightbox(5)">
+      <div class="film-card-img"><img src="screenshots/ai-failure-analysis.png" alt="AI Failure Analysis"></div>
+      <div class="film-card-info"><span class="name">AI Failure Analysis</span><span class="cat">AI</span></div>
+    </div>
+    <div class="film-card" data-cat="ai" onclick="openLightbox(6)">
+      <div class="film-card-img"><img src="screenshots/ai-assistant.png" alt="AI Assistant"></div>
+      <div class="film-card-info"><span class="name">AI Assistant</span><span class="cat">AI</span></div>
+    </div>
+    <div class="film-card" data-cat="admin" onclick="openLightbox(7)">
+      <div class="film-card-img"><img src="screenshots/home.png" alt="Home Dashboard"></div>
+      <div class="film-card-info"><span class="name">Home Dashboard</span><span class="cat">Dashboard</span></div>
+    </div>
+    <div class="film-card" data-cat="admin" onclick="openLightbox(8)">
+      <div class="film-card-img"><img src="screenshots/settings.png" alt="Settings"></div>
+      <div class="film-card-info"><span class="name">Settings</span><span class="cat">Admin</span></div>
+    </div>
+    <div class="film-card" data-cat="admin" onclick="openLightbox(9)">
+      <div class="film-card-img"><img src="screenshots/help-center.png" alt="Help Center"></div>
+      <div class="film-card-info"><span class="name">Help Center</span><span class="cat">Admin</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lightbox-close" onclick="closeLightbox(event)">&#10005;</div>
+  <div class="lightbox-placeholder" id="lightbox-content">
+    <p id="lightbox-ph-text">Screenshot placeholder — add real screenshots to see them here</p>
+    <!-- Replaced dynamically with <img> when screenshots are added -->
+  </div>
+  <div class="lightbox-caption">
+    <div class="lc-name" id="lightbox-name"></div>
+    <div class="lc-desc" id="lightbox-desc"></div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ ARCHITECTURE ═══ -->
+<section id="architecture">
+<div class="container">
+  <span class="section-label" style="color:var(--amber)">Under the Hood</span>
+  <h2 class="section-title">5-layer architecture. Zero external services.</h2>
+  <p class="section-desc">No Redis. No Postgres. No message queue. One npm install, one database file, one process. If it runs on your laptop, it runs on your server.</p>
+
+  <div class="arch-flow">
+    <div class="arch-layer"><div class="n">1</div><div><div class="title">Browser &mdash; React 19 + Monaco Editor</div><div class="desc">127 components, Framer Motion animations, Zustand state</div></div></div>
+    <div class="arch-arrow">&#8595;</div>
+    <div class="arch-layer"><div class="n">2</div><div><div class="title">Server Actions &mdash; Next.js 16</div><div class="desc">27 server actions, zero separate API server needed</div></div></div>
+    <div class="arch-arrow">&#8595;</div>
+    <div class="arch-layer"><div class="n">3</div><div><div class="title">Engine Layer &mdash; 15 Modules</div><div class="desc">HTTP executor, assertions, auth, scripts, import, security, load testing</div></div></div>
+    <div class="arch-arrow">&#8595;</div>
+    <div class="arch-layer"><div class="n">4</div><div><div class="title">AI Service &mdash; Unified LLM Client</div><div class="desc">6 providers, fallback chain, streaming, no SDKs (native fetch)</div></div></div>
+    <div class="arch-arrow">&#8595;</div>
+    <div class="arch-layer"><div class="n">5</div><div><div class="title">Database &mdash; Prisma 6 + SQLite</div><div class="desc">Single file DB, type-safe queries, backup = cp one file</div></div></div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ TECH STACK ═══ -->
+<section>
+<div class="container" style="text-align:center">
+  <span class="section-label" style="color:var(--blue)">Tech Stack</span>
+  <h2 class="section-title">Modern. Production-grade. Every choice intentional.</h2>
+
+  <div class="stack">
+    <div class="stack-item">Next.js 16.1.6</div>
+    <div class="stack-item">React 19</div>
+    <div class="stack-item">TypeScript 5</div>
+    <div class="stack-item">Prisma 6</div>
+    <div class="stack-item">SQLite</div>
+    <div class="stack-item">Tailwind CSS 4</div>
+    <div class="stack-item">Zustand 5</div>
+    <div class="stack-item">Monaco Editor</div>
+    <div class="stack-item">Framer Motion 12</div>
+    <div class="stack-item">shadcn/ui</div>
+    <div class="stack-item">Zod 4</div>
+    <div class="stack-item">AJV</div>
+    <div class="stack-item">jsonpath-plus</div>
+    <div class="stack-item">SSE Streaming</div>
+    <div class="stack-item">Jose (JWT)</div>
+    <div class="stack-item">bcryptjs</div>
+    <div class="stack-item">Recharts</div>
+    <div class="stack-item">Marked</div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SELF-HOSTED ═══ -->
+<section>
+<div class="container">
+  <span class="section-label" style="color:var(--green)">Self-Hosted</span>
+  <h2 class="section-title">Your server. Your data. Zero cost.</h2>
+  <p class="section-desc">No cloud subscription. No per-seat licensing. No data leaving your network. Deploy anywhere Node.js runs.</p>
+
+  <div class="compare">
+    <div class="compare-card them">
+      <h4><span style="color:var(--red)">&#10005;</span> Typical API Testing Tools</h4>
+      <ul>
+        <li><span class="icon" style="color:var(--red)">&#10005;</span> $15&ndash;$49 per user per month</li>
+        <li><span class="icon" style="color:var(--red)">&#10005;</span> Your test data on their cloud</li>
+        <li><span class="icon" style="color:var(--red)">&#10005;</span> Feature-gated pricing tiers</li>
+        <li><span class="icon" style="color:var(--red)">&#10005;</span> AI features cost extra or absent</li>
+        <li><span class="icon" style="color:var(--red)">&#10005;</span> Single protocol per tool</li>
+        <li><span class="icon" style="color:var(--red)">&#10005;</span> No self-hosted option</li>
+      </ul>
+    </div>
+    <div class="compare-card us">
+      <h4><span style="color:var(--green)">&#10003;</span> API Qortex</h4>
+      <ul>
+        <li><span class="icon" style="color:var(--green)">&#10003;</span> $0 forever. No per-seat cost.</li>
+        <li><span class="icon" style="color:var(--green)">&#10003;</span> Single SQLite file on your server</li>
+        <li><span class="icon" style="color:var(--green)">&#10003;</span> All features included. No tiers.</li>
+        <li><span class="icon" style="color:var(--green)">&#10003;</span> 6-provider AI with free tiers</li>
+        <li><span class="icon" style="color:var(--green)">&#10003;</span> REST + GraphQL + WS + gRPC</li>
+        <li><span class="icon" style="color:var(--green)">&#10003;</span> Runs on any server with Node.js</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ 15 ENGINE MODULES ═══ -->
+<section>
+<div class="container">
+  <span class="section-label" style="color:var(--amber)">Engine Modules</span>
+  <h2 class="section-title">15 specialized modules in <span style="font-family:var(--mono);color:var(--blue)">src/engine/</span></h2>
+  <p class="section-desc">Each module handles one responsibility. Together they power every test execution, assertion, auth flow, and AI analysis.</p>
+
+  <div style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+    <div class="tag" style="padding:10px 14px;font-size:12px">http-executor.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">assertion-evaluator.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">auth-resolver.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">script-runner.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">variable-resolver.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">graphql-client.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">websocket-tester.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">curl-parser.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">policy-resolver.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">contract-validator.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">security-scanner.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">load-tester.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">cicd-generator.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">cli-runner.ts</div>
+    <div class="tag" style="padding:10px 14px;font-size:12px">api-monitor.ts</div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ ABOUT BUILDER ═══ -->
+<section>
+<div class="container">
+  <div class="about-builder">
+    <div class="about-avatar">KP</div>
+    <h3>Krishna Praveen Manchala</h3>
+    <p class="role">QA Manager &middot; 17+ Years in Quality Engineering</p>
+    <div class="rainbow-bar" style="margin:0 auto 20px"></div>
+    <p class="bio">Built API Qortex and Phoenix TestAI as self-initiated projects to solve real problems in API testing and test automation. Not a developer by title &mdash; a QA Manager who saw the gaps in existing tools and decided to build something better. From architecture design to deploying on a live server, every line of code was written to prove that quality engineers can build the tools they need.</p>
+    <div class="about-links">
+      <a href="https://in.linkedin.com/in/krishnapraveen-m" class="btn btn-primary" target="_blank">LinkedIn</a>
+      <a href="mailto:krishpravn@gmail.com" class="btn btn-ghost">Contact</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+<div class="container">
+  <p><strong>API Qortex</strong> &mdash; Self-hosted, AI-powered API testing platform.</p>
+  <p class="tagline">SELF-HOSTED &middot; AI-POWERED &middot; ZERO RECURRING COST</p>
+</div>
+</footer>
+
+<script>
+// Screenshot data
+const screenshots = [
+  { name:'Projects', desc:'Project grid with stats, status, quick actions', file:'projects.png', cat:'organize' },
+  { name:'Smart Import', desc:'Auto-detect 6 formats, AI dependency chain analysis', file:'import.png', cat:'organize' },
+  { name:'REST Playground', desc:'URL bar, method pill, request/response panels', file:'playground-rest.png', cat:'test' },
+  { name:'GraphQL Playground', desc:'Purple editor, introspection, variables panel', file:'playground-graphql.png', cat:'test' },
+  { name:'Execution Results', desc:'Real-time SSE streaming, pass/fail indicators', file:'execution-results.png', cat:'test' },
+  { name:'AI Failure Analysis', desc:'Root cause, category, severity, fix suggestion', file:'ai-failure-analysis.png', cat:'ai' },
+  { name:'AI Assistant', desc:'Interactive chat for debugging help', file:'ai-assistant.png', cat:'ai' },
+  { name:'Home Dashboard', desc:'Pass rate trends, response times, project health', file:'home.png', cat:'admin' },
+  { name:'Settings', desc:'AI provider chain, model selection, API keys', file:'settings.png', cat:'admin' },
+  { name:'Help Center', desc:'110 articles, search, AI chat, categories', file:'help-center.png', cat:'admin' }
+];
+
+// ── Auto-scrolling filmstrip ──
+const filmstrip = document.getElementById('filmstrip');
+let scrollSpeed = 0.8;
+let isPaused = false;
+let isFiltered = false;
+let animFrame;
+
+function autoScroll() {
+  if (!isPaused && !isFiltered) {
+    filmstrip.scrollLeft += scrollSpeed;
+    // Reset to start when we reach the duplicate set (halfway)
+    const halfWidth = filmstrip.scrollWidth / 2;
+    if (filmstrip.scrollLeft >= halfWidth) {
+      filmstrip.scrollLeft = 0;
+    }
+  }
+  animFrame = requestAnimationFrame(autoScroll);
+}
+
+// Enable overflow-x for JS scroll
+filmstrip.style.overflowX = 'hidden';
+autoScroll();
+
+filmstrip.addEventListener('mouseenter', () => { isPaused = true; });
+filmstrip.addEventListener('mouseleave', () => { isPaused = false; });
+filmstrip.addEventListener('touchstart', () => { isPaused = true; }, { passive: true });
+filmstrip.addEventListener('touchend', () => { setTimeout(() => { isPaused = false; }, 2000); });
+
+// Filter gallery
+function filterGallery(cat) {
+  document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  const cards = filmstrip.querySelectorAll('.film-card');
+  
+  if (cat === 'all') {
+    cards.forEach(c => { c.style.display = ''; });
+    isFiltered = false;
+    filmstrip.scrollLeft = 0;
+  } else {
+    isFiltered = true;
+    cards.forEach(c => {
+      c.style.display = c.dataset.cat === cat ? '' : 'none';
+    });
+    filmstrip.scrollLeft = 0;
+  }
+}
+
+// Lightbox
+function openLightbox(index) {
+  const lb = document.getElementById('lightbox');
+  const s = screenshots[index];
+  document.getElementById('lightbox-name').textContent = s.name;
+  document.getElementById('lightbox-desc').textContent = s.desc;
+  
+  const content = document.getElementById('lightbox-content');
+  const img = new Image();
+  img.onload = function() {
+    content.innerHTML = '';
+    content.appendChild(img);
+    content.className = '';
+    content.style.cssText = '';
+  };
+  img.onerror = function() {
+    content.className = 'lightbox-placeholder';
+    content.innerHTML = '<p>&#128248; Screenshot: ' + s.file + '<br><small style="color:var(--text3)">Add screenshot to screenshots/ folder to see it here</small></p>';
+  };
+  img.src = 'screenshots/' + s.file;
+  img.alt = s.name;
+  img.style.cssText = 'max-width:90vw;max-height:85vh;border-radius:12px;border:1px solid rgba(255,255,255,0.12);box-shadow:0 24px 80px rgba(0,0,0,0.5)';
+  
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox(e) {
+  if (e.target.classList.contains('lightbox') || e.target.classList.contains('lightbox-close')) {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+</script>
+
+</body>
+</html>

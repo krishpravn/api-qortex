@@ -643,8 +643,8 @@ body{font-family:var(--f);color:var(--ink2);background:var(--white);-webkit-font
 /* ═══ SCROLL REVEAL ═══ */
 const obs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('show');obs.unobserve(e.target)}})},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
-/* Immediately reveal hero elements that are already in viewport on load */
-requestAnimationFrame(()=>{document.querySelectorAll('.hero .rv').forEach(el=>el.classList.add('show'));document.querySelectorAll('.stats-bar .rv, .stats-inner .rv').forEach(el=>el.classList.add('show'))});
+/* Immediately reveal hero + stats elements already in viewport on load */
+document.querySelectorAll('.hero .rv, .stats-bar .rv, .stats-inner .rv').forEach(el=>{el.style.transitionDelay='0s';el.classList.add('show')});
 
 /* ═══ NAV SHADOW ═══ */
 window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',window.scrollY>10)});

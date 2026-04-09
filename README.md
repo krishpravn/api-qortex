@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <a href="https://krishnapraveen7.github.io/api-qortex">🌐 Live Landing Page</a> · 
+  <a href="https://krishpravn.github.io/api-qortex">🌐 Live Landing Page</a> · 
   <a href="#screenshots">📸 Screenshots</a> · 
   <a href="#architecture">🏗 Architecture</a> · 
   <a href="#features">✨ Features</a>
@@ -41,7 +41,7 @@ Unlike tools like Postman (cloud-locked, per-seat pricing) or QA Touch (test man
 | Lines of Code | 88,000+ |
 | Engine Modules | 15 |
 | React Components | 127 |
-| Assertion Types | 25+ |
+| Assertion Types | 27 |
 | AI Providers | 6 |
 | API Protocols | 4 |
 | Server Actions | 27 |
@@ -72,7 +72,7 @@ One unified workspace for **REST** (8 body types, 7 request tabs), **GraphQL** (
 ### 🤖 AI Failure Analysis
 When tests fail, AI reads the full context — request, response, assertions — and returns a structured diagnosis: root cause, category, severity, and specific fix suggestion. Connected to **6 AI providers** with automatic fallback.
 
-### ✅ 25+ Assertion Types
+### ✅ 27 Assertion Types
 Status, body, JSON path, array, header, performance, and advanced checks (schema validation, regex, custom JS). Visual builder for no-code creation. Global assertion policies for org-wide quality enforcement.
 
 ### 📥 6 Smart Import Formats
@@ -128,6 +128,12 @@ When one provider hits its rate limit, the system automatically rotates models w
 | ![Settings](screenshots/settings.png) | **Settings** — AI provider chain configuration, model selection, API key management |
 | ![Help](screenshots/help-center.png) | **Help Center** — 110 articles, search, AI chat, categorized documentation |
 
+### Live Platform
+
+| Screenshot | Description |
+|-----------|-------------|
+| ![Live](screenshots/live.png) | **Live Platform** — Real application running with all features active |
+
 ## Architecture
 
 ```
@@ -180,7 +186,7 @@ When one provider hits its rate limit, the system automatically rotates models w
 ```
 src/engine/
 ├── http-executor.ts        # Core HTTP execution (fetch + timing)
-├── assertion-evaluator.ts  # 25+ assertion types (JSONPath, regex, schema)
+├── assertion-evaluator.ts  # 27 assertion types (JSONPath, regex, schema)
 ├── auth-resolver.ts        # 9 auth types with inheritance chain
 ├── script-runner.ts        # pm.* API (Postman-compatible scripting)
 ├── variable-resolver.ts    # {{variable}} resolution across environments

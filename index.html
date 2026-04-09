@@ -645,6 +645,8 @@ const obs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isInters
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 /* Immediately reveal hero + stats elements already in viewport on load */
 document.querySelectorAll('.hero .rv, .stats-bar .rv, .stats-inner .rv').forEach(el=>{el.style.transitionDelay='0s';el.classList.add('show')});
+/* Safety net: reveal ALL remaining .rv elements after 1.5s to prevent invisible sections */
+setTimeout(()=>{document.querySelectorAll('.rv:not(.show)').forEach(el=>el.classList.add('show'))},1500);
 
 /* ═══ NAV SHADOW ═══ */
 window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',window.scrollY>10)});
